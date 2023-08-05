@@ -24,47 +24,23 @@ connection.onInitialize((params) => {
   }
 })
 
-const config = {} // Load your config file here
+const config = {
+  $color11: "#fff500",
+} // Load your config file here
 
 console.log("here is the server!")
 
 connection.onCompletion((params) => {
-  const textDocument = params.textDocument
-  const position = params.position
+  // Map the config values to CompletionItems
+  const completionItems = Object.entries(config).map(([key, value]) => {
+    const item = CompletionItem.create(key)
+    item.kind = CompletionItemKind.Color // Use Text instead of Color
+    item.documentation = value // Use the color value as documentation
 
-  const doc = documents.get(textDocument.uri)
-  if (!doc) return null
-
-  const line = doc.getText().split("\n")[position.line]
-  const match = line.match(/\$[a-zA-Z0-9]*$/)
-
-  console.log("[onCompletion]", {
-    line,
-    match,
-    position,
-    params,
+    return item
   })
 
-  if (match) {
-    const prefix = match[0].substring(1) // Remove the dollar sign
-
-    // Filter the config values based on the prefix
-    const filteredItems = Object.entries(config).filter(([key]) =>
-      key.startsWith(prefix)
-    )
-
-    // Map the filtered items to CompletionItems
-    const completionItems = filteredItems.map(([key, value]) => {
-      const item = CompletionItem.create(key)
-      item.kind = CompletionItemKind.Text // Use Text instead of Color
-      item.detail = `Color: ${value}` // Provide the color value in the detail
-      return item
-    })
-
-    return completionItems
-  }
-
-  return null
+  return completionItems
 })
 
 // onCompletionResolve handler

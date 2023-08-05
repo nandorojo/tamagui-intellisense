@@ -57,7 +57,7 @@ let clientOptions: LanguageClientOptions = {
 }
 
 export const client = new LanguageClient(
-  "tamagui-intellisense",
+  "@nandorojo/tamagui-intellisense",
   "Tamagui Intellisense",
   serverOptions,
   clientOptions
