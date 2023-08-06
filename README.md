@@ -4,7 +4,10 @@
 
 
 
-https://github.com/nandorojo/tamagui-intellisense/assets/13172299/1a997a62-64e3-4f50-962b-691c53ef597f
+
+https://github.com/nandorojo/tamagui-intellisense/assets/13172299/90e5faef-df4a-49d9-a647-3f1b2406bda0
+
+
 
 
 
