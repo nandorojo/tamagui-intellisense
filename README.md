@@ -2,6 +2,12 @@
 
 **coming soon**
 
+
+
+https://github.com/nandorojo/tamagui-intellisense/assets/13172299/1a997a62-64e3-4f50-962b-691c53ef597f
+
+
+
 ## Setup
 
 After installing the extension, add `.vscode/settings.json` in your repo with the following:
