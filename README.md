@@ -18,7 +18,20 @@ Replace that with the relative path to your tamagui config file from the root of
 yarn
 ```
 
-Start the dev server in VSCode by Pressing `F5` (or `fn` + `F5` on Mac). It should open a new window for testing.
+Then see the [./vsc-extension-quickstart.md](./vsc-extension-quickstart.md) for how to run the extension in VSCode. Below is essentially what you'll do.
+
+Start the dev server in VSCode by Pressing `F5` (or `fn` + `F5` on Mac). It should open a new window for testing. In that window, you should create a tamagui config and follow the setup steps above. Then create a new file like this for testing:
+
+```ts
+declare function styled(a: any, obj: { bg?: string }): any
+const View = 1
+
+styled(View, {
+  bg: "$",
+})
+```
+
+And try the autocomplete there.
 
 ### Development
 
