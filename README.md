@@ -31,7 +31,23 @@ yarn
 
 Then see the [./vsc-extension-quickstart.md](./vsc-extension-quickstart.md) for how to run the extension in VSCode. Below is essentially what you'll do.
 
-Start the dev server in VSCode by Pressing `F5` (or `fn` + `F5` on Mac). It should open a new window for testing. In that window, you should create a tamagui config and follow the setup steps above. Then create a new file like this for testing:
+Start the dev server in VSCode by Pressing `F5` (or `fn` + `F5` on Mac). It should open a new window for testing. In that window, you should create a tamagui config and follow the setup steps above. Then create a new file like this for testing.
+
+- `test-folder/tamagui.config.ts`
+
+```ts
+import { shorthands } from "@tamagui/shorthands";
+import { themes, tokens } from "@tamagui/themes";
+import { createFont, createTamagui } from "tamagui";
+
+export default createTamagui({
+  themes,
+  tokens,
+  shorthands,
+})
+```
+
+- `test-folder/test.ts`
 
 ```ts
 declare function styled(a: any, obj: { bg?: string }): any
