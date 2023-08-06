@@ -8,7 +8,6 @@ const {
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
 const color = require("color")
-const htmlTags = require("html-tags")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -44,26 +43,6 @@ const getCompletionItems = (params) => {
   if (tamaguiConfig) {
     const { tokens, themes } = tamaguiConfig
 
-    // if (tokens) {
-    //   autocompleteItems.push(
-    //     ...Object.entries(tokens.color).map(([key, token]) => {
-    //       const name = `$${key}`
-
-    //       const item = CompletionItem.create(name)
-
-    //       console.log("[token]", name, token)
-
-    //       item.kind = CompletionItemKind.Color // Use Text instead of Color
-    //       item.documentation = [
-    //         color.hsl(token.val).hex(),
-    //         ["AKA", token.val].join(" "),
-    //       ].join("\n")
-
-    //       return item
-    //     })
-    //   )
-    // }
-
     if (themes) {
       const [firstTheme] = Object.values(themes)
       if (firstTheme) {
@@ -79,43 +58,72 @@ const getCompletionItems = (params) => {
           })
         })
 
-        autocompleteItems.push(
-          ...Object.entries(firstTheme).map(([key, theme]) => {
-            const name = `$${key}`
+        // sort each color by # of underscores per theme, ascending
+        Object.entries(colorsFromOtherThemes).forEach(([colorKey, theme]) => {
+          const sortedTheme = Object.entries(theme).sort(
+            ([themeNameA], [themeNameB]) => {
+              const countUnderscores = (str) => str.split("_").length - 1
+              return countUnderscores(themeNameA) - countUnderscores(themeNameB)
+            }
+          )
+          colorsFromOtherThemes[colorKey] = Object.fromEntries(sortedTheme)
+        })
 
-            const allColors = Object.entries(colorsFromOtherThemes[key])
+        Object.entries(firstTheme).forEach(([key, theme]) => {
+          const name = `$${key}`
 
-            const item = CompletionItem.create(name)
+          const allColors = Object.entries(colorsFromOtherThemes[key])
 
-            item.kind = CompletionItemKind.Color // Use Text instead of Color
-            item.documentation = {
-              kind: "markdown",
-              value: allColors
-                .map(([themeName, hsl]) => {
-                  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><rect x="1" y="1" width="22" height="22" fill="${hsl}" rx="4" /></svg>`
+          const item = CompletionItem.create(name)
 
-                  // ignore components like dark_Button
-                  const ignorePatterh = /_[A-Z]/
+          item.kind = CompletionItemKind.Color // Use Text instead of Color
+          let markdown = `| Theme | Color |
+| --- | --- |`
+          allColors.forEach(([themeName, hsl]) => {
+            // ignore components like dark_Button
+            const ignorePatterh = /_[A-Z]/
 
-                  if (ignorePatterh.test(themeName)) {
-                    return ``
-                  }
-
-                  return `![Image](data:image/svg+xml;base64,${btoa(
-                    svg
-                  )}) **${themeName.replace(/_/g, " ")}**`
-                })
-                // TODO single loop to improve perf
-                .filter(Boolean)
-                .join("\n<br>"),
+            if (ignorePatterh.test(themeName)) {
+              return
             }
 
-            console.log("[theme]", item.documentation.value)
-
-            return item
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><rect x="1" y="1" width="22" height="22" fill="${hsl}" rx="4" /></svg>`
+            const image = `![Image](data:image/svg+xml;base64,${btoa(svg)})`
+            markdown += `\n| ${themeName.replace(/_/g, " ")} | ${image} |`
           })
-        )
+          item.documentation = {
+            kind: "markdown",
+            value: markdown,
+          }
+
+          autocompleteItems.push(item)
+        })
       }
+    }
+
+    if (tokens) {
+      Object.entries(tokens.color).forEach(([key, token]) => {
+        const name = `$${key}`
+
+        const item = CompletionItem.create(name)
+
+        console.log("[token]", name, token)
+
+        item.kind = CompletionItemKind.Color // Use Text instead of Color
+        item.documentation = [color.hsl(token.val).hex()].join("\n")
+
+        const hasCapitalizedThemeNameInKey = Object.keys(themes).some(
+          (themeName) => {
+            const capitalize = (str) =>
+              str.charAt(0).toUpperCase() + str.slice(1)
+            return key.includes(capitalize(themeName))
+          }
+        )
+
+        if (!hasCapitalizedThemeNameInKey) {
+          autocompleteItems.push(item)
+        }
+      })
     }
   }
 
