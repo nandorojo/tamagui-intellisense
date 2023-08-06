@@ -30,9 +30,12 @@ let clientOptions: LanguageClientOptions = {
     // TODO let users customize this
     // TODO ignore any files that are git-ignored like node_modules
     fileEvents: vscode.workspace.createFileSystemWatcher("**/*.{ts,tsx}"),
+    configurationSection: "@nandorojo/tamagui-intellisense", // The configuration section the server wants to listen for
   },
 
   initializationOptions: {
+    ...vscode.workspace.getConfiguration("@nandorojo/tamagui-intellisense"), // Pass the config to the server
+
     capabilities: {
       completion: {
         dynamicRegistration: false,
@@ -62,5 +65,3 @@ export const client = new LanguageClient(
   serverOptions,
   clientOptions
 )
-
-console.log("[client]", client)
