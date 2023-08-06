@@ -1,8 +1,32 @@
 # 👨🏻‍🍳
 
+## Setup
+
+After installing the library, add `.vscode/settings.json` in your repo with the following:
+
+```json
+{
+  "@nandorojo/tamagui-intellisense.configPath": "./path-to/tamagui.config.ts"
+}
+```
+
+Replace that with the relative path to your tamagui config file from the root of your repo. Defaults to `./tamagui.config.ts`.
+
 ## Contribute
 
-Fork the repo
+```
+yarn
+```
+
+Start the dev server in VSCode by Pressing `F5` (or `fn` + `F5` on Mac). It should open a new window for testing.
+
+### Development
+
+When you make changes in `src/server.js`, you have to click the little green refresh at the top of your main VSCode window to see them update in the test window.
+
+This could probably be fixed with a watch script but I haven't done it. The reason: Webpack bundles everything in `dist` in one file, but we're referencing the `server.js` file in `client.ts` which won't get resolved post-build if we use TS. So we have to restart the server to see changes.
+
+In your test window, put a `tamagui.config.ts` in the root to make it simple.
 
 <!-- # @nandorojo/tamagui-intellisense README
 
