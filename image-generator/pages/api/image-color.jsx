@@ -12,6 +12,7 @@ export default function handler(
 ) {
   return new ImageResponse(
     (
+      // used for the theme colors
       <div
         style={{
           width: "100%",
