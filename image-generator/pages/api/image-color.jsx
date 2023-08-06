@@ -17,7 +17,9 @@ export default function handler(
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: req.nextUrl.searchParams?.get("color"),
+          backgroundColor: req.nextUrl.searchParams
+            ?.get("color")
+            .replace(".jpg", ""),
         }}
       />
     ),

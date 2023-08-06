@@ -110,7 +110,7 @@ connection.onCompletion((params) => {
               value: allColors
                 .map(([themeName, hsl]) => {
                   return [
-                    `![${themeName}](http://192.168.4.110:3000/api/image-color?color=red)`,
+                    `![${themeName}](https://tamagui-intellisense.vercel.app//api/image-color?color=${hsl})`,
                     themeName,
                   ].join(" ")
                 })
