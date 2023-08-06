@@ -1,5 +1,9 @@
 # 👨🏻‍🍳
 
+## Contribute
+
+Fork the repo
+
 <!-- # @nandorojo/tamagui-intellisense README
 
 This is the README for your extension "@nandorojo/tamagui-intellisense". After writing up a brief description, we recommend including the following sections.
