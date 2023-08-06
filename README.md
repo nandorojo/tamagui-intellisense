@@ -1,8 +1,10 @@
 # 👨🏻‍🍳
 
+**coming soon**
+
 ## Setup
 
-After installing the library, add `.vscode/settings.json` in your repo with the following:
+After installing the extension, add `.vscode/settings.json` in your repo with the following:
 
 ```json
 {
