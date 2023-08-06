@@ -8,6 +8,7 @@ const {
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
 const color = require("color")
+const htmlTags = require("html-tags")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -81,9 +82,23 @@ connection.onCompletion((params) => {
     if (themes) {
       const [firstTheme] = Object.values(themes)
       if (firstTheme) {
+        /** @type {{[colorKey: string]: { [themeName: string]: string }}} */
+        const colorsFromOtherThemes = {}
+
+        Object.entries(themes).forEach(([themeName, theme]) => {
+          Object.entries(theme).forEach(([colorKey, { val }]) => {
+            if (!colorsFromOtherThemes[colorKey]) {
+              colorsFromOtherThemes[colorKey] = {}
+            }
+            colorsFromOtherThemes[colorKey][themeName] = val
+          })
+        })
+
         autocompleteItems.push(
           ...Object.entries(firstTheme).map(([key, theme]) => {
             const name = `$${key}`
+
+            const allColors = Object.entries(colorsFromOtherThemes[key])
 
             const item = CompletionItem.create(name)
 
@@ -92,10 +107,14 @@ connection.onCompletion((params) => {
             item.kind = CompletionItemKind.Color // Use Text instead of Color
             item.documentation = {
               kind: "markdown",
-              value: [
-                `![Tux, the Linux mascot](https://mdg.imgix.net/assets/images/tux.png?auto=format&fit=clip&q=40&w=100)`,
-                "**i can put images here...**",
-              ].join("\n"),
+              value: allColors
+                .map(([themeName, hsl]) => {
+                  return [
+                    `![${themeName}](http://192.168.4.110:3000/api/image-color?color=red)`,
+                    themeName,
+                  ].join(" ")
+                })
+                .join("<br>"),
             }
 
             return item
