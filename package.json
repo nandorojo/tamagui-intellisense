@@ -1,8 +1,16 @@
 {
   "name": "nandorojo-tamagui",
   "displayName": "nandorojo-tamagui",
-  "description": "Tokens & colors as you type.",
+  "description": "A VSCode Extension for your Tamagui projects, showing you colors and other theme tokens as you type.",
   "version": "0.0.1",
+  "author": {
+    "name": "Fernando Rojo",
+    "url": "https://twitter.com/fernandotherojo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nandorojo/tamagui-intellisense"
+  },
   "engines": {
     "vscode": "^1.81.0"
   },
