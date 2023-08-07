@@ -2,14 +2,7 @@
 
 **coming soon**
 
-
-
-
 https://github.com/nandorojo/tamagui-intellisense/assets/13172299/90e5faef-df4a-49d9-a647-3f1b2406bda0
-
-
-
-
 
 ## Setup
 
@@ -17,7 +10,7 @@ After installing the extension, add `.vscode/settings.json` in your repo with th
 
 ```json
 {
-  "@nandorojo/tamagui-intellisense.configPath": "./path-to/tamagui.config.ts"
+  "nandorojo-tamagui.configPath": "./path-to/tamagui.config.ts"
 }
 ```
 
@@ -36,9 +29,9 @@ Start the dev server in VSCode by Pressing `F5` (or `fn` + `F5` on Mac). It shou
 - `test-folder/tamagui.config.ts`
 
 ```ts
-import { shorthands } from "@tamagui/shorthands";
-import { themes, tokens } from "@tamagui/themes";
-import { createFont, createTamagui } from "tamagui";
+import { shorthands } from "@tamagui/shorthands"
+import { themes, tokens } from "@tamagui/themes"
+import { createFont, createTamagui } from "tamagui"
 
 export default createTamagui({
   themes,
@@ -68,9 +61,9 @@ This could probably be fixed with a watch script but I haven't done it. The reas
 
 In your test window, put a `tamagui.config.ts` in the root to make it simple.
 
-<!-- # @nandorojo/tamagui-intellisense README
+<!-- # nandorojo-tamagui README
 
-This is the README for your extension "@nandorojo/tamagui-intellisense". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "nandorojo-tamagui". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
