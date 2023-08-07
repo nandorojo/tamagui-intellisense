@@ -7,7 +7,6 @@ const {
 } = require("vscode-languageserver/node")
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
-const color = require("color")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -110,7 +109,7 @@ const getCompletionItems = (params) => {
         console.log("[token]", name, token)
 
         item.kind = CompletionItemKind.Color // Use Text instead of Color
-        item.documentation = [color.hsl(token.val).hex()].join("\n")
+        item.documentation = token.val
 
         const hasCapitalizedThemeNameInKey = Object.keys(themes).some(
           (themeName) => {
@@ -123,6 +122,54 @@ const getCompletionItems = (params) => {
         if (!hasCapitalizedThemeNameInKey) {
           autocompleteItems.push(item)
         }
+      })
+
+      // all numerical tokens
+      const numericalTokenKeys = Array.from(
+        new Set([
+          ...Object.keys(tokens.radius || {}),
+          ...Object.keys(tokens.space || {}),
+          ...Object.keys(tokens.size || {}),
+          ...Object.keys(tokens.zIndex || {}),
+        ])
+      ).sort((a, b) => {
+        return a.localeCompare(b)
+      })
+
+      numericalTokenKeys.forEach((key) => {
+        const name = `$${key}`
+
+        const item = CompletionItem.create(name)
+
+        item.kind = CompletionItemKind.Field
+
+        const px = (val) => (typeof val == "number" ? `${val}px` : val || "")
+
+        const space = px(tokens.space?.[key]?.val)
+        const size = px(tokens.size?.[key]?.val)
+        const radius = px(tokens.radius?.[key]?.val)
+        const zIndex = px(tokens.zIndex?.[key]?.val)
+
+        const columns = [
+          { name: "space", value: space },
+          { name: "size", value: size },
+          { name: "radius", value: radius },
+          { name: "zIndex", value: zIndex },
+        ].filter(({ value }) => value)
+
+        const headers = columns.map(({ name }) => name)
+        const values = columns.map(({ value }) => value)
+
+        const markdown = `| ${headers.join(" | ")} |
+| ${headers.map((s) => "---").join(" | ")} |
+| ${values.join(" | ")} |`
+
+        item.documentation = {
+          kind: "markdown",
+          value: markdown,
+        }
+
+        autocompleteItems.push(item)
       })
     }
   }

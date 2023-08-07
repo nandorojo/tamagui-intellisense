@@ -70,7 +70,6 @@
   "dependencies": {
     "@tamagui/static": "^1.49.7",
     "@vercel/og": "^0.5.10",
-    "color": "^4.2.3",
     "html-tags": "^3.3.1",
     "vscode-languageclient": "^8.1.0",
     "vscode-languageserver": "^8.1.0",
