@@ -2,7 +2,7 @@
 
 A VSCode extension for autocompleting Tamagui styles.
 
-<video src="https://user-images.githubusercontent.com/13172299/258659477-90e5faef-df4a-49d9-a647-3f1b2406bda0.mp4">
+<video src="https://user-images.githubusercontent.com/13172299/258659477-90e5faef-df4a-49d9-a647-3f1b2406bda0.mp4"></video>
 
 ## Setup
 
