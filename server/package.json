@@ -1,8 +1,9 @@
 {
-  "name": "nandorojo-tamagui",
-  "displayName": "Tamagui Intellisense",
-  "description": "A VSCode Extension for your Tamagui projects, showing you colors and other theme tokens as you type.",
+  "name": "@nandorojo/tamagui-language-server",
+  "displayName": "Tamagui Lanuage Server",
+  "description": "A language server to power Tamagui's intellisense.",
   "version": "0.0.7",
+  "private": false,
   "icon": "",
   "author": {
     "name": "Fernando Rojo",
@@ -22,7 +23,7 @@
     "onLanguage:typescript",
     "onLanguage:typescriptreact"
   ],
-  "main": "./dist/extension.js",
+  "main": "./out/main.js",
   "files": [
     "dist",
     "src"
@@ -46,14 +47,14 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn package",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/index.js --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node \"--external:esbuild\"",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./",
-    "compile": "webpack && npx shx cp src/server.js dist/server.js",
+    "compile": "webpack",
     "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map && npx shx cp src/server.js dist/server.js",
+    "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
@@ -86,6 +87,7 @@
     "webpack-cli": "^5.1.1"
   },
   "dependencies": {
+    "@nandorojo/tamagui-language-server": "^0.0.7",
     "@tamagui/static": "^1.49.7",
     "@vercel/og": "^0.5.10",
     "html-tags": "^3.3.1",

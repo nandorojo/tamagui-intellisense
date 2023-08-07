@@ -11,11 +11,11 @@ import * as path from "path"
 
 let serverOptions: ServerOptions = {
   run: {
-    module: path.resolve(__dirname, "../src/server"),
+    module: path.resolve(__dirname, "./server"),
     transport: TransportKind.ipc,
   },
   debug: {
-    module: path.resolve(__dirname, "../src/server"),
+    module: path.resolve(__dirname, "./server"),
     transport: TransportKind.ipc,
     options: { execArgv: ["--nolazy", "--inspect=6009"] },
   },
