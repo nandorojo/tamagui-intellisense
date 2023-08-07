@@ -24,17 +24,22 @@ const getTamaguiConfig = (
   params
 ) => {
   if (!config) {
-    const { loadTamaguiSync } = require("@tamagui/static")
-    config = loadTamaguiSync({
-      components: ["tamagui"],
-      config: params.initializationOptions.configPath,
-    }).tamaguiConfig
+    try {
+      const { loadTamaguiSync } = require("@tamagui/static")
+      config = loadTamaguiSync({
+        components: ["tamagui"],
+        config: params.initializationOptions.configPath,
+      }).tamaguiConfig
+    } catch {}
   }
   return config
 }
 
 const getCompletionItems = (params) => {
   const tamaguiConfig = getTamaguiConfig(params)
+  if (!tamaguiConfig) {
+    return []
+  }
   /**
    * @type {CompletionItem[]}
    */
@@ -180,18 +185,20 @@ const getCompletionItems = (params) => {
 let completionItems = []
 
 connection.onInitialize((params) => {
-  getTamaguiConfig(params)
+  const config = getTamaguiConfig(params)
 
   completionItems = getCompletionItems(params)
 
-  return {
-    capabilities: {
-      textDocumentSync: TextDocumentSyncKind.Full,
-      completionProvider: {
-        resolveProvider: true,
-        triggerCharacters: ["$"],
+  if (config) {
+    return {
+      capabilities: {
+        textDocumentSync: TextDocumentSyncKind.Full,
+        completionProvider: {
+          resolveProvider: true,
+          triggerCharacters: ["$"],
+        },
       },
-    },
+    }
   }
 })
 

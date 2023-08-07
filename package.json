@@ -1,8 +1,9 @@
 {
   "name": "nandorojo-tamagui",
-  "displayName": "nandorojo-tamagui",
+  "displayName": "Tamagui Intellisense",
   "description": "A VSCode Extension for your Tamagui projects, showing you colors and other theme tokens as you type.",
-  "version": "0.0.1",
+  "version": "0.0.4",
+  "icon": "",
   "author": {
     "name": "Fernando Rojo",
     "url": "https://twitter.com/fernandotherojo"
@@ -86,5 +87,6 @@
   "prettier": {
     "singleQuote": false,
     "semi": false
-  }
+  },
+  "publisher": "FernandoTheRojo"
 }
