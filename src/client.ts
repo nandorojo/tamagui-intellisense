@@ -21,6 +21,10 @@ let serverOptions: ServerOptions = {
   },
 }
 
+// Get the workspace folder path
+const workspaceFolders = vscode.workspace.workspaceFolders
+const workspaceRoot = workspaceFolders ? workspaceFolders[0].uri.fsPath : null
+
 let clientOptions: LanguageClientOptions = {
   documentSelector: [
     { scheme: "file", language: "typescript" },
@@ -35,6 +39,7 @@ let clientOptions: LanguageClientOptions = {
 
   initializationOptions: {
     ...vscode.workspace.getConfiguration("nandorojo-tamagui"), // Pass the config to the server
+    workspaceRoot,
 
     capabilities: {
       completion: {

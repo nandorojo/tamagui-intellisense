@@ -7,6 +7,7 @@ const {
 } = require("vscode-languageserver/node")
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
+const path = require("path")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -23,25 +24,34 @@ const getTamaguiConfig = (
    */
   params
 ) => {
-  if (!config) {
-    try {
-      const { loadTamaguiSync } = require("@tamagui/static")
-      config = loadTamaguiSync({
-        components: ["tamagui"],
-        config: params.initializationOptions.configPath,
-      }).tamaguiConfig
-    } catch {}
+  console.log("👁️ Getting tamagui config...")
+  process.env.TAMAGUI_TARGET = "web"
+  if (config) {
+    console.log("⚡️ Using cached config")
+    return config
   }
+  try {
+    const { loadTamaguiSync } = require("@tamagui/static")
+    config = loadTamaguiSync({
+      components: ["tamagui"],
+      config: path.resolve(
+        params.initializationOptions.workspaceRoot,
+        params.initializationOptions.configPath
+      ),
+    }).tamaguiConfig
+  } catch {}
   if (!config) {
     console.log(
       "failed to read tamagui config from ",
-      params.initializationOptions.configPath
+      params.initializationOptions?.configPath
+    )
+    console.log("process.cwd:", process.cwd())
+    console.log(
+      "absolute file path:",
+      path.resolve(process.cwd(), params.initializationOptions.configPath)
     )
   } else {
-    console.log(
-      "successfully read tamagui config from ",
-      params.initializationOptions.configPath
-    )
+    console.log("✅ Loaded config:", params.initializationOptions.configPath)
   }
   return config
 }
@@ -122,8 +132,6 @@ const getCompletionItems = (params) => {
         const name = `$${key}`
 
         const item = CompletionItem.create(name)
-
-        console.log("[token]", name, token)
 
         item.kind = CompletionItemKind.Color // Use Text instead of Color
         item.documentation = token.val
@@ -219,8 +227,6 @@ connection.onInitialize((params) => {
 })
 
 connection.onCompletion((params) => {
-  completionItems = getCompletionItems(params)
-
   return completionItems
 })
 
