@@ -8,6 +8,7 @@ const {
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
 const path = require("path")
+const { existsSync, readFileSync } = require("fs")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -24,20 +25,23 @@ const getTamaguiConfig = (
    */
   params
 ) => {
-  console.log("👁️ Getting tamagui config...")
+  const configPath = path.resolve(
+    params.initializationOptions.workspaceRoot,
+    params.initializationOptions.configPath
+  )
+  console.log("👁️ Getting tamagui config...", configPath)
+  console.log()
   process.env.TAMAGUI_TARGET = "web"
   if (config) {
     console.log("⚡️ Using cached config")
+    console.log()
     return config
   }
   try {
     const { loadTamaguiSync } = require("@tamagui/static")
     config = loadTamaguiSync({
       components: ["tamagui"],
-      config: path.resolve(
-        params.initializationOptions.workspaceRoot,
-        params.initializationOptions.configPath
-      ),
+      config: configPath,
     }).tamaguiConfig
   } catch {}
   if (!config) {
@@ -45,11 +49,23 @@ const getTamaguiConfig = (
       "failed to read tamagui config from ",
       params.initializationOptions?.configPath
     )
-    console.log("process.cwd:", process.cwd())
+    console.log()
+    console.log("workspace root", params.initializationOptions.workspaceRoot)
+    console.log()
     console.log(
       "absolute file path:",
       path.resolve(process.cwd(), params.initializationOptions.configPath)
     )
+    console.log()
+    const exists = existsSync(configPath)
+    console("does config file exist?", exists ? "✅ yes" : "👎 no")
+    console.log()
+    if (exists) {
+      console.log(
+        "file contents:",
+        readFileSync(configPath, "utf8").split(0, 20)
+      )
+    }
   } else {
     console.log("✅ Loaded config:", params.initializationOptions.configPath)
   }
