@@ -32,12 +32,24 @@ const getTamaguiConfig = (
       }).tamaguiConfig
     } catch {}
   }
+  if (!config) {
+    console.log(
+      "failed to read tamagui config from ",
+      params.initializationOptions.configPath
+    )
+  } else {
+    console.log(
+      "successfully read tamagui config from ",
+      params.initializationOptions.configPath
+    )
+  }
   return config
 }
 
 const getCompletionItems = (params) => {
   const tamaguiConfig = getTamaguiConfig(params)
   if (!tamaguiConfig) {
+    console.log("no tamagui config, skipping completion")
     return []
   }
   /**
@@ -186,8 +198,12 @@ let completionItems = []
 
 connection.onInitialize((params) => {
   const config = getTamaguiConfig(params)
-
   completionItems = getCompletionItems(params)
+
+  console.log("[onInitialize]", {
+    configPath: params.initializationOptions.configPath,
+    autocompleteItemsLoaded: completionItems.length,
+  })
 
   if (config) {
     return {
@@ -203,6 +219,8 @@ connection.onInitialize((params) => {
 })
 
 connection.onCompletion((params) => {
+  completionItems = getCompletionItems(params)
+
   return completionItems
 })
 
