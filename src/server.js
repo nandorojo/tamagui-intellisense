@@ -25,11 +25,6 @@ const getTamaguiConfig = (
    */
   params
 ) => {
-  const configPath = path.resolve(
-    params.initializationOptions.workspaceRoot,
-    params.initializationOptions.configPath
-  )
-  console.log("👁️ Getting tamagui config...", configPath)
   console.log()
   process.env.TAMAGUI_TARGET = "web"
   if (config) {
@@ -37,7 +32,13 @@ const getTamaguiConfig = (
     console.log()
     return config
   }
+  let configPath
   try {
+    configPath = path.resolve(
+      params.initializationOptions.workspaceRoot,
+      params.initializationOptions.configPath
+    )
+    console.log("👁️ Getting tamagui config...", configPath)
     const { loadTamaguiSync } = require("@tamagui/static")
     config = loadTamaguiSync({
       components: ["tamagui"],
@@ -229,20 +230,34 @@ connection.onInitialize((params) => {
     autocompleteItemsLoaded: completionItems.length,
   })
 
-  if (config) {
-    return {
-      capabilities: {
-        textDocumentSync: TextDocumentSyncKind.Full,
-        completionProvider: {
-          resolveProvider: true,
-          triggerCharacters: ["$"],
-        },
+  return {
+    capabilities: {
+      textDocumentSync: TextDocumentSyncKind.Full,
+      completionProvider: {
+        resolveProvider: true,
+        triggerCharacters: ["$"],
       },
-    }
+    },
   }
 })
 
 connection.onCompletion((params) => {
+  const has$InTheLine = (() => {
+    const textDocument = params.textDocument
+    const position = params.position
+    const doc = documents.get(textDocument.uri)
+    if (!doc) return false
+
+    const line = doc.getText().split("\n")[position.line]
+    const lineBeforePosition = line.substring(0, position.character)
+
+    return lineBeforePosition.includes("$")
+  })()
+  console.log("has$InTheLine?", has$InTheLine)
+  console.log()
+  if (!has$InTheLine) {
+    return null
+  }
   return completionItems
 })
 
