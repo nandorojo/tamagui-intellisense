@@ -59,7 +59,7 @@ const getTamaguiConfig = (
     )
     console.log()
     const exists = existsSync(configPath)
-    console("does config file exist?", exists ? "✅ yes" : "👎 no")
+    console.log("does config file exist?", exists ? "✅ yes" : "👎 no")
     console.log()
     if (exists) {
       console.log(
