@@ -26,7 +26,6 @@ const getTamaguiConfig = (
   params
 ) => {
   console.log()
-  process.env.TAMAGUI_TARGET = "web"
   if (config) {
     console.log("⚡️ Using cached config")
     console.log()
@@ -44,7 +43,9 @@ const getTamaguiConfig = (
       components: ["tamagui"],
       config: configPath,
     }).tamaguiConfig
-  } catch {}
+  } catch (e) {
+    console.log("[getTamaguiConfig] error:", e?.message)
+  }
   if (!config) {
     console.log(
       "failed to read tamagui config from ",

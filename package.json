@@ -2,7 +2,7 @@
   "name": "nandorojo-tamagui",
   "displayName": "Tamagui Intellisense",
   "description": "A VSCode Extension for your Tamagui projects, showing you colors and other theme tokens as you type.",
-  "version": "0.0.12",
+  "version": "0.0.15",
   "icon": "",
   "author": {
     "name": "Fernando Rojo",
@@ -22,6 +22,11 @@
     "onLanguage:typescript",
     "onLanguage:typescriptreact"
   ],
+  "targets": {
+    "default": {
+      "distDir": "dist"
+    }
+  },
   "main": "./dist/extension.js",
   "files": [
     "dist",
@@ -48,9 +53,10 @@
   "scripts": {
     "vscode:prepublish": "yarn package",
     "## esbuild-explanation": "the server file needs to get buildt separately, so that is what esbuild handles",
-    "esbuild-base": "esbuild ./src/server.js --bundle --outfile=dist/server.js --external:vscode --external:esbuild --format=cjs --platform=node",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "compile-server": "npm run esbuild-base -- --sourcemap --minify",
+    "esbuild-base": "esbuild ./src/server.js --bundle --outfile=dist/server.js --external:vscode --format=cjs --platform=node",
+    "esbuild-watch": "yarn esbuild-base --sourcemap --watch",
+    "compile-server": "yarn esbuild-base --sourcemap --minify",
+    "parcel-build": "TAMAGUI_TARGET=web yarn parcel build src/server.js --dist-dir dist --target node",
     "## webpack-explanation": "we use webpack to bundle the extension, which then imports the server file from above.",
     "compile": "webpack && yarn compile-server",
     "watch": "webpack --watch && esbuild-watch",
@@ -61,7 +67,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "publish": "npx @vscode/vsce publish"
   },
   "devDependencies": {
     "@tamagui/shorthands": "^1.49.7",
@@ -74,21 +81,33 @@
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "@vscode/test-electron": "^2.3.2",
-    "esbuild": "^0.18.19",
+    "assert": "^2.0.0",
+    "buffer": "^5.5.0||^6.0.0",
+    "constants-browserify": "^1.0.0",
+    "crypto-browserify": "^3.12.0",
     "eslint": "^8.41.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
+    "os-browserify": "^0.3.0",
+    "parcel": "^2.9.3",
+    "path-browserify": "^1.0.0",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "stream-browserify": "^3.0.0",
     "tamagui": "^1.49.7",
     "ts-loader": "^9.4.3",
+    "tty-browserify": "^0.0.1",
     "typescript": "^5.1.3",
+    "util": "^0.12.3",
+    "vm-browserify": "^1.1.2",
     "webpack": "^5.85.0",
     "webpack-cli": "^5.1.1"
   },
   "dependencies": {
     "@tamagui/static": "^1.49.7",
     "@vercel/og": "^0.5.10",
+    "esbuild": "^0.18.19",
     "html-tags": "^3.3.1",
     "vscode-languageclient": "^8.1.0",
     "vscode-languageserver": "^8.1.0",
