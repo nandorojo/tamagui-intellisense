@@ -8,15 +8,17 @@ A VSCode extension for autocompleting Tamagui styles.
 
 ## Setup
 
-After installing the extension, add `.vscode/settings.json` in your repo with the following:
+After installing the extension, you can add `.vscode/settings.json` in your repo with the following configuration.
+
+You should give the path to where your auto-generated `.tamagui` folder lives. If you have a Next.js website in your repo, then this folder is likely `apps/next`:
 
 ```json
 {
-  "nandorojo-tamagui.configPath": "./path-to/tamagui.config.ts"
+  "nandorojo-tamagui.configPath": "apps/next"
 }
 ```
 
-Replace that with the relative path to your tamagui config file from the root of your repo. Defaults to `./tamagui.config.ts`.
+Be sure to replace `apps/next` that with the relative path to your `.tamagui` from the root of your repo. Defaults to `./tamagui.config.ts`.
 
 ## Contribute
 

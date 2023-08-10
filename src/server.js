@@ -34,7 +34,7 @@ const getTamaguiConfig = (
   let configPath = path.resolve(
     params.initializationOptions.workspaceRoot,
     params.initializationOptions.configPath || "apps/next",
-    "./tamagui/tamagui.config.json"
+    ".tamagui/tamagui.config.json"
   )
   try {
     /**
