@@ -8,7 +8,7 @@ const {
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
 const path = require("path")
-const { existsSync, readFileSync, exists } = require("fs")
+const { existsSync, readFileSync } = require("fs")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -43,7 +43,7 @@ const getTamaguiConfig = (
     if (existsSync(configPath)) {
       config = require(configPath).tamaguiConfig
     }
-    console.log("👁️ Getting tamagui config...", config)
+    console.log("👁️ Getting tamagui config...", Boolean(config))
   } catch (e) {
     console.log("[getTamaguiConfig] error:", e?.message)
   }
@@ -95,7 +95,7 @@ const getCompletionItems = (params) => {
         const colorsFromOtherThemes = {}
 
         Object.entries(themes).forEach(([themeName, theme]) => {
-          Object.entries(theme).forEach(([colorKey, { val }]) => {
+          Object.entries(theme).forEach(([colorKey, val]) => {
             if (!colorsFromOtherThemes[colorKey]) {
               colorsFromOtherThemes[colorKey] = {}
             }
@@ -114,6 +114,8 @@ const getCompletionItems = (params) => {
           colorsFromOtherThemes[colorKey] = Object.fromEntries(sortedTheme)
         })
 
+        console.log("[colors-from]", colorsFromOtherThemes)
+
         Object.entries(firstTheme).forEach(([key, theme]) => {
           const name = `$${key}`
 
@@ -126,11 +128,13 @@ const getCompletionItems = (params) => {
 | --- | --- |`
           allColors.forEach(([themeName, hsl]) => {
             // ignore components like dark_Button
-            const ignorePatterh = /_[A-Z]/
+            const ignorePattern = /_[A-Z]/
 
-            if (ignorePatterh.test(themeName)) {
+            if (ignorePattern.test(themeName)) {
               return
             }
+
+            if (!hsl.startsWith("hsl")) return
 
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><rect x="1" y="1" width="22" height="22" fill="${hsl}" rx="4" /></svg>`
             const image = `![Image](data:image/svg+xml;base64,${btoa(svg)})`

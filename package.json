@@ -2,7 +2,7 @@
   "name": "nandorojo-tamagui",
   "displayName": "Tamagui Intellisense",
   "description": "A VSCode Extension for your Tamagui projects, showing you colors and other theme tokens as you type.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "icon": "",
   "author": {
     "name": "Fernando Rojo",
@@ -107,6 +107,7 @@
   "dependencies": {
     "@tamagui/static": "^1.49.7",
     "@vercel/og": "^0.5.10",
+    "color": "^4.2.3",
     "esbuild": "^0.18.19",
     "html-tags": "^3.3.1",
     "vscode-languageclient": "^8.1.0",
