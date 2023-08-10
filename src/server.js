@@ -8,7 +8,7 @@ const {
 const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
 const path = require("path")
-const { existsSync, readFileSync } = require("fs")
+const { existsSync, readFileSync, exists } = require("fs")
 
 const documents = new TextDocuments(TextDocument)
 
@@ -31,18 +31,19 @@ const getTamaguiConfig = (
     console.log()
     return config
   }
-  let configPath
+  let configPath = path.resolve(
+    params.initializationOptions.workspaceRoot,
+    params.initializationOptions.configPath || "apps/next",
+    "./tamagui/tamagui.config.json"
+  )
   try {
-    configPath = path.resolve(
-      params.initializationOptions.workspaceRoot,
-      params.initializationOptions.configPath
-    )
-    console.log("👁️ Getting tamagui config...", configPath)
-    const { loadTamaguiSync } = require("@tamagui/static")
-    config = loadTamaguiSync({
-      components: ["tamagui"],
-      config: configPath,
-    }).tamaguiConfig
+    /**
+     * @type {import("tamagui").TamaguiInternalConfig}
+     */
+    if (existsSync(configPath)) {
+      config = require(configPath).tamaguiConfig
+    }
+    console.log("👁️ Getting tamagui config...", config)
   } catch (e) {
     console.log("[getTamaguiConfig] error:", e?.message)
   }
