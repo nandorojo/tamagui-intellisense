@@ -2,7 +2,7 @@
   "name": "nandorojo-tamagui",
   "displayName": "Tamagui Intellisense",
   "description": "A VSCode Extension for your Tamagui projects, showing you colors and other theme tokens as you type.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "icon": "",
   "author": {
     "name": "Fernando Rojo",
@@ -53,9 +53,9 @@
   "scripts": {
     "vscode:prepublish": "yarn package",
     "## esbuild-explanation": "the server file needs to get buildt separately, so that is what esbuild handles",
-    "esbuild-base": "esbuild ./src/server.js --bundle --outfile=dist/server.js --external:vscode --format=cjs --platform=node",
+    "esbuild-base": "esbuild ./src/server.js --bundle --outfile=dist/server.js --external:vscode --external:esbuild --format=cjs --platform=node",
     "esbuild-watch": "yarn esbuild-base --sourcemap --watch",
-    "compile-server": "TAMAGUI_TARGET=web yarn esbuild-base --sourcemap --minify --external:esbuild",
+    "compile-server": "TAMAGUI_TARGET=web yarn esbuild-base --sourcemap --minify",
     "parcel-build": "TAMAGUI_TARGET=web yarn parcel build src/server.js --dist-dir dist",
     "## webpack-explanation": "we use webpack to bundle the extension, which then imports the server file from above.",
     "compile": "webpack && yarn compile-server",
