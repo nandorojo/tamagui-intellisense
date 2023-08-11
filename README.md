@@ -18,7 +18,7 @@ You should give the path to where your auto-generated `.tamagui` folder lives. I
 }
 ```
 
-Be sure to replace `apps/next` that with the relative path to your `.tamagui` from the root of your repo. Defaults to `./tamagui.config.ts`.
+Be sure to replace `apps/next` that with the relative path to your `.tamagui` from the root of your repo.
 
 ## Contribute
 
