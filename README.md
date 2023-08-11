@@ -1,4 +1,4 @@
-# `nandorojo-tamagui-intellisense`
+# `nandorojo-tamagui`
 
 A VSCode extension for autocompleting Tamagui styles.
 
