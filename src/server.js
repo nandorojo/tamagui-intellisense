@@ -31,10 +31,11 @@ const getTamaguiConfig = (
     console.log()
     return config
   }
+  const dirPath = params.initializationOptions.configPath || "apps/next"
   let configPath = path.resolve(
     params.initializationOptions.workspaceRoot,
-    params.initializationOptions.configPath || "apps/next",
-    ".tamagui/tamagui.config.json"
+    dirPath,
+    ...(dirPath.endsWith(".json") ? [] : [".tamagui/tamagui.config.json"])
   )
   try {
     /**
