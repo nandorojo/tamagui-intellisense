@@ -9,10 +9,21 @@ const { TextDocument } = require("vscode-languageserver-textdocument")
 const { TextDocumentSyncKind } = require("vscode-languageserver/node")
 const path = require("path")
 const { existsSync, readFileSync } = require("fs")
+const color = require("color")
 
 const documents = new TextDocuments(TextDocument)
 
 const connection = createConnection(ProposedFeatures.all)
+
+const svgCheckerboard = `<defs>
+<pattern id="pattern-checker" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+<rect x="0" y="0" width="4" height="4" fill="#fff" />
+<rect x="4" y="0" width="4" height="4" fill="#000" />
+<rect x="0" y="4" width="4" height="4" fill="#000" />
+<rect x="4" y="4" width="4" height="4" fill="#fff" />
+</pattern>
+</defs>
+<rect x="1" y="1" width="22" height="22" rx="4" fill="url(#pattern-checker)" />`
 
 /**
  * @type {ReturnType<typeof import('@tamagui/static').loadTamaguiSync>['tamaguiConfig']}
@@ -97,6 +108,7 @@ const getCompletionItems = (params) => {
 
         Object.entries(themes).forEach(([themeName, theme]) => {
           Object.entries(theme).forEach(([colorKey, val]) => {
+            if (colorKey === 'id') return
             if (!colorsFromOtherThemes[colorKey]) {
               colorsFromOtherThemes[colorKey] = {}
             }
@@ -118,6 +130,7 @@ const getCompletionItems = (params) => {
         console.log("[colors-from]", colorsFromOtherThemes)
 
         Object.entries(firstTheme).forEach(([key, theme]) => {
+          if (key === 'id') return
           const name = `$${key}`
 
           const allColors = Object.entries(colorsFromOtherThemes[key])
@@ -125,9 +138,9 @@ const getCompletionItems = (params) => {
           const item = CompletionItem.create(name)
 
           item.kind = CompletionItemKind.Color // Use Text instead of Color
-          let markdown = `| Theme | Color |
-| --- | --- |`
-          allColors.forEach(([themeName, hsl]) => {
+          let markdown = `| Theme | Color | Value |
+| --- | --- | --- |`
+          allColors.forEach(([themeName, value]) => {
             // ignore components like dark_Button
             const ignorePattern = /_[A-Z]/
 
@@ -135,9 +148,19 @@ const getCompletionItems = (params) => {
               return
             }
 
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><rect x="1" y="1" width="22" height="22" fill="${hsl}" rx="4" /></svg>`
+            let colorValue
+            try {
+              colorValue = color(value)
+            } catch (e) {
+              console.log("error parsing color", value)
+              return
+            }
+
+            const hasAlphaTransparency = colorValue.alpha() !== 1
+
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">${hasAlphaTransparency ? svgCheckerboard : ''}<rect x="1" y="1" width="22" height="22" fill="${value}" rx="4" /></svg>`
             const image = `![Image](data:image/svg+xml;base64,${btoa(svg)})`
-            markdown += `\n| ${themeName.replace(/_/g, " ")} | ${image} |`
+            markdown += `\n| ${themeName.replace(/_/g, " ")} | ${image} | \`${value}\` |`
           })
           item.documentation = {
             kind: "markdown",
