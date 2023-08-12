@@ -97,6 +97,7 @@ const getCompletionItems = (params) => {
 
         Object.entries(themes).forEach(([themeName, theme]) => {
           Object.entries(theme).forEach(([colorKey, val]) => {
+            if (colorKey === 'id') return
             if (!colorsFromOtherThemes[colorKey]) {
               colorsFromOtherThemes[colorKey] = {}
             }
@@ -118,6 +119,7 @@ const getCompletionItems = (params) => {
         console.log("[colors-from]", colorsFromOtherThemes)
 
         Object.entries(firstTheme).forEach(([key, theme]) => {
+          if (key === 'id') return
           const name = `$${key}`
 
           const allColors = Object.entries(colorsFromOtherThemes[key])
