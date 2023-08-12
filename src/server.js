@@ -135,8 +135,6 @@ const getCompletionItems = (params) => {
               return
             }
 
-            if (!hsl.startsWith("hsl")) return
-
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><rect x="1" y="1" width="22" height="22" fill="${hsl}" rx="4" /></svg>`
             const image = `![Image](data:image/svg+xml;base64,${btoa(svg)})`
             markdown += `\n| ${themeName.replace(/_/g, " ")} | ${image} |`
