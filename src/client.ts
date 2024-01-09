@@ -33,7 +33,7 @@ let clientOptions: LanguageClientOptions = {
   synchronize: {
     // TODO let users customize this
     // TODO ignore any files that are git-ignored like node_modules
-    fileEvents: vscode.workspace.createFileSystemWatcher("**/*.{ts,tsx}"),
+    fileEvents: vscode.workspace.createFileSystemWatcher("**/*.{js,ts,tsx}"),
     configurationSection: "nandorojo-tamagui", // The configuration section the server wants to listen for
   },
 
